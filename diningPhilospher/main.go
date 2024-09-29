@@ -24,9 +24,13 @@ var hungry = 3
 var eatTime = 1 * time.Second
 var thinkTime = 3 * time.Second
 
+var orderMutex sync.Mutex // Mutex to handle order of eating
+var order []string        // slice of string to store order of eating
+
 func dine() {
 	wg := &sync.WaitGroup{} // Waitgroup to synchronise the entire flow
 	wg.Add(len(Philosphers))
+	orderMutex = sync.Mutex{}
 
 	seated := &sync.WaitGroup{} // Waitgroup to sync the seating of philosphers
 	seated.Add(len(Philosphers))
@@ -76,6 +80,10 @@ func diningPhiloshers(philospher Philospher, wg *sync.WaitGroup, forks map[int]*
 	}
 	fmt.Println(philospher.name, "is satisified.")
 	fmt.Println(philospher.name, "has left the table.")
+
+	orderMutex.Lock()
+	order = append(order, philospher.name)
+	orderMutex.Unlock()
 }
 
 func main() {
@@ -83,4 +91,8 @@ func main() {
 	fmt.Println("The table is empty.")
 	dine()
 	fmt.Println("The table is empty.")
+	for i := 0; i < len(order); i++ {
+		fmt.Println("The order of eating was :-")
+		fmt.Printf("%s ", order[i])
+	}
 }
