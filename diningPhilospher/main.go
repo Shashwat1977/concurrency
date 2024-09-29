@@ -91,8 +91,8 @@ func main() {
 	fmt.Println("The table is empty.")
 	dine()
 	fmt.Println("The table is empty.")
+	fmt.Println("The order of eating was :-")
 	for i := 0; i < len(order); i++ {
-		fmt.Println("The order of eating was :-")
 		fmt.Printf("%s ", order[i])
 	}
 }
